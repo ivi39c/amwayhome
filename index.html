@@ -49,13 +49,14 @@
       transform-style: preserve-3d;
     }
 
-    /* 放大後卡片的樣式，置中並以畫面 50% 大小顯示，保持等比例 */
+    /* 放大後卡片的樣式，置中並以畫面寬度的 50% 顯示，保持等比例 */
 .card.fullscreen {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 50vw;
+  height: auto;
   aspect-ratio: 7 / 10;
   z-index: 999;
   display: flex;
@@ -74,9 +75,16 @@
     }
 
     @keyframes spinOnce {
-      0% {
-        transform: scale(1) rotateY(0deg);
-      }
+  0% {
+    transform: scale(1) rotateY(0deg);
+  }
+  50% {
+    transform: scale(2) rotateY(180deg);
+  }
+  100% {
+    transform: scale(0.5) rotateY(360deg);
+  }
+}
       100% {
         transform: scale(2) rotateY(360deg);
       }
