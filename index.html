@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-height, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>卡片特效</title>
   <style>
-    /* Reset 基礎樣式 */
     * {
       margin: 0;
       padding: 0;
@@ -17,10 +16,9 @@
       overflow: hidden;
       font-family: sans-serif;
       background-color: #f5f5f5;
-      perspective: 1000px; /* 提供 3D 效果透視 */
+      perspective: 1000px;
     }
 
-    /* 卡片容器，使用 grid 排列 2x2 */
     .container {
       display: grid;
       grid-template-columns: repeat(2, auto);
@@ -32,12 +30,10 @@
       transition: filter 0.3s ease;
     }
 
-    /* 模糊背景效果（當有卡片放大） */
     .blurred {
       filter: blur(10px);
     }
 
-    /* 卡片尺寸計算：左右各留 20px，中間 16px，等比例縮放 */
     .card {
       width: calc((100vw - 40px - 16px) / 2);
       height: calc(((100vw - 40px - 16px) / 2) * 10 / 7);
@@ -45,7 +41,6 @@
       cursor: pointer;
     }
 
-    /* 內層卡片：負責 3D 旋轉動畫 */
     .card-inner {
       width: 100%;
       height: 100%;
@@ -54,37 +49,30 @@
       transform-style: preserve-3d;
     }
 
-    /* 放大後的卡片，固定在全螢幕中央 */
     .card.fullscreen {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90vw;
-  height: auto;
-  aspect-ratio: 7 / 10;
-  max-height: 90vh;
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(0px);
-  padding: 0;
-  margin: 0;
-}
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: auto;
+      height: min(calc(90vw * 10 / 7), 90vh);
+      aspect-ratio: 7 / 10;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(0px);
+      padding: 0;
+      margin: 0;
+    }
 
-    /* 放大後內層卡片：全螢幕顯示並動畫旋轉 */
     .card.fullscreen .card-inner {
       width: 100%;
-      height: auto;
-      max-height: 100vh;
-      max-width: 100vw;
-      aspect-ratio: 7 / 10;
+      height: 100%;
       animation: spinOnce 1.2s ease-out forwards;
       object-fit: contain;
     }
 
-    /* 卡片旋轉放大動畫 */
     @keyframes spinOnce {
       0% {
         transform: scale(1) rotateY(0deg);
@@ -94,7 +82,6 @@
       }
     }
 
-    /* 正反面卡片設定 */
     .front, .back {
       position: absolute;
       width: 100%;
@@ -109,7 +96,6 @@
       transform: rotateY(180deg);
     }
 
-    /* 火花粒子特效 */
     .firework {
       position: absolute;
       pointer-events: none;
@@ -135,7 +121,6 @@
   </style>
 </head>
 <body>
-  <!-- 卡片容器，內含四張卡片 -->
   <div class="container">
     <div class="card" data-img="card-01.png">
       <div class="card-inner">
@@ -163,7 +148,6 @@
     </div>
   </div>
 
-  <!-- 音效播放器 -->
   <audio id="sfx" src="sfx.wav" preload="auto"></audio>
 
   <script>
@@ -171,7 +155,6 @@
     const sound = document.getElementById("sfx");
     const container = document.querySelector(".container");
 
-    // 產生灑金光特效
     function launchFireworkAround(el) {
       const rect = el.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
@@ -192,19 +175,16 @@
       }
     }
 
-    // 點擊卡片：播放音效、複製卡片並全螢幕顯示
     cards.forEach(card => {
       card.addEventListener("click", () => {
-        sound.pause(); // 停止音效（若尚在播放）
-        sound.currentTime = 2.0; // 從第 2 秒播放
+        sound.pause();
+        sound.currentTime = 2.0;
         sound.play().catch(err => {
           console.warn("Autoplay blocked:", err);
         });
 
         const clone = card.cloneNode(true);
         clone.classList.add("fullscreen");
-
-        // 點擊放大卡片可關閉回列表
         clone.addEventListener("click", () => {
           clone.remove();
           container.classList.remove("blurred");
@@ -212,7 +192,7 @@
 
         document.body.appendChild(clone);
         container.classList.add("blurred");
-        launchFireworkAround(clone); // 金光效果
+        launchFireworkAround(clone);
       });
     });
   </script>
