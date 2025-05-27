@@ -56,17 +56,20 @@
 
     /* 放大後的卡片，固定在全螢幕中央 */
     .card.fullscreen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(0px);
-    }
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(0px);
+}
 
     /* 放大後內層卡片：全螢幕顯示並動畫旋轉 */
     .card.fullscreen .card-inner {
@@ -191,7 +194,7 @@
     cards.forEach(card => {
       card.addEventListener("click", () => {
         sound.pause(); // 停止音效（若尚在播放）
-        sound.currentTime = 2.2; // 從第 2.2 秒播放
+        sound.currentTime = 2.0; // 從第 2 秒播放
         sound.play().catch(err => {
           console.warn("Autoplay blocked:", err);
         });
