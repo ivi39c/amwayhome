@@ -25,7 +25,7 @@
       display: grid;
       grid-template-columns: repeat(2, auto);
       grid-template-rows: repeat(2, auto);
-      gap: 20px 16px;
+      gap: 8px 8px;
       place-content: center;
       width: 100vw;
       height: 100vh;
@@ -60,15 +60,17 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
+  width: calc(100vw - 40px);
+  height: calc((100vw - 40px) * 10 / 7);
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 40px);
   z-index: 999;
   display: flex;
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(0px);
+  padding: 0;
+  margin: 0;
 }
 
     /* 放大後內層卡片：全螢幕顯示並動畫旋轉 */
