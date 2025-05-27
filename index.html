@@ -54,18 +54,17 @@
       transform-style: preserve-3d;
     }
 
-    /* 放大後卡片的樣式，置中並以畫面寬度的 50% 顯示，保持等比例 */
-    /* 放大後卡片的樣式，置中顯示並以畫面寬度的 50% 呈現，保持比例不裁切 */
+
 /* 放大後卡片的樣式，置中顯示並以畫面寬度的 70% 呈現，保持比例不裁切 */
 .card.fullscreen {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 70vw;
-  height: auto;
-  max-height: 90vh;
-  aspect-ratio: 7 / 10;
+  width: 80vw;               /* ✅ 調整這裡即可改變卡片放大後寬度 */
+  height: auto;              /* 高度自動計算 */
+  max-height: 90vh;          /* 避免超過畫面高度 */
+  aspect-ratio: 7 / 10;      /* 保持卡片比例 */
   z-index: 999;
   display: flex;
   align-items: center;
