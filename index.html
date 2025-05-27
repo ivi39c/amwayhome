@@ -39,8 +39,8 @@
 
     /* 每張卡片的初始大小（等比例） */
     .card {
-      width: calc((100vw - 40px) / 2);
-      height: calc(((100vw - 40px) / 2) * 10 / 7);
+      width: calc((100vw - 40px) / 2); /* 水平邊距共 40px，由兩張卡片平均分配 */
+      height: calc(((100vw - 40px) / 2) * 10 / 7); /* 依比例自動換算高度 */
       perspective: 1000px;
       cursor: pointer;
     }
@@ -54,25 +54,24 @@
       transform-style: preserve-3d;
     }
 
-
-/* 放大後卡片的樣式，置中顯示並以畫面寬度的 70% 呈現，保持比例不裁切 */
-.card.fullscreen {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 95vw;               /* ✅ 調整這裡即可改變卡片放大後寬度 */
-  height: auto;              /* 高度自動計算 */
-  max-height: 95vh;          /* 避免超過畫面高度 */
-  aspect-ratio: 7 / 10;      /* 保持卡片比例 */
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(0px);
-  padding: 0;
-  margin: 0;
-}
+    /* 放大後卡片的樣式，置中顯示並以畫面寬度的 70% 呈現，保持比例不裁切 */
+    .card.fullscreen {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70vw;
+      height: auto;
+      max-height: 90vh;
+      aspect-ratio: 7 / 10;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(0px);
+      padding: 0;
+      margin: 0;
+    }
 
     /* 放大時旋轉一次動畫 */
     .card.fullscreen .card-inner {
@@ -91,18 +90,21 @@
       }
     }
 
-    /* 卡片正反面樣式 */
+    /* 卡片正反面樣式，保持一致比例與尺寸 */
     .front, .back {
       position: absolute;
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
-      background-size: cover;
+      background-size: contain;
       background-position: center;
+      background-repeat: no-repeat;
+      border: none;
+      transform: translateZ(1px);
     }
 
     .back {
-      transform: rotateY(180deg);
+      transform: rotateY(180deg) translateZ(1px);
     }
 
     /* 火花粒子效果 */
