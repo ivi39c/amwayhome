@@ -39,8 +39,8 @@
 
     /* 每張卡片的初始大小（等比例） */
     .card {
-      width: calc((100vw - 40px - 8px) / 2);
-      height: calc(((100vw - 40px - 8px) / 2) * 10 / 7);
+      width: calc((100vw - 40px) / 2);
+      height: calc(((100vw - 40px) / 2) * 10 / 7);
       perspective: 1000px;
       cursor: pointer;
     }
@@ -61,7 +61,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80vw;               /* ✅ 調整這裡即可改變卡片放大後寬度 */
+  width: 90vw;               /* ✅ 調整這裡即可改變卡片放大後寬度 */
   height: auto;              /* 高度自動計算 */
   max-height: 90vh;          /* 避免超過畫面高度 */
   aspect-ratio: 7 / 10;      /* 保持卡片比例 */
