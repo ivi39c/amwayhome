@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-height, initial-scale=1.0" />
-  <title>AmwayHome SA8</title>
+  <title>卡片特效</title>
   <style>
     /* Reset 基礎樣式 */
     * {
@@ -25,7 +25,7 @@
       display: grid;
       grid-template-columns: repeat(2, auto);
       grid-template-rows: repeat(2, auto);
-      gap: 8px 8px;
+      gap: 8px;
       place-content: center;
       width: 100vw;
       height: 100vh;
@@ -39,8 +39,8 @@
 
     /* 卡片尺寸計算：左右各留 20px，中間 16px，等比例縮放 */
     .card {
-      width: calc((100vw - 40px - 8px) / 2);
-      height: calc(((100vw - 40px - 8px) / 2) * 10 / 7);
+      width: calc((100vw - 40px - 16px) / 2);
+      height: calc(((100vw - 40px - 16px) / 2) * 10 / 7);
       perspective: 1000px;
       cursor: pointer;
     }
@@ -60,8 +60,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 1560px;
-  height: calc(1560px * 10 / 7);
+  width: 90vw;
+  height: auto;
+  aspect-ratio: 7 / 10;
+  max-height: 90vh;
   z-index: 999;
   display: flex;
   align-items: center;
