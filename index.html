@@ -162,7 +162,7 @@
     cards.forEach(card => {
       card.addEventListener("click", () => {
         sound.pause();
-        sound.currentTime = 2.0;
+        sound.currentTime = 2.5;
         
         sound.play().catch(err => {
           console.warn("Autoplay blocked:", err);
