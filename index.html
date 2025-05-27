@@ -39,7 +39,7 @@
 
     /* ----------- 卡片本體 ----------- */
     .card {
-      /*width: calc((100vw - 40px) / 2); /* 扣除邊距後平均分兩欄 */
+      width: calc((100vw - 40px) / 2); /* 扣除邊距後平均分兩欄 */
       height: calc(((100vw - 40px) / 2) * 10 / 7); /* 維持 7:10 比例 */
       perspective: 1000px;
       cursor: pointer;
@@ -60,7 +60,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 95vw;              /* 放大為畫面寬度的 % */
+      width: 90vw;              /* 放大為畫面寬度的 70% */
       height: auto;
       max-height: 90vh;         /* 限制最大高度不超出畫面 */
       aspect-ratio: 7 / 10;     /* 保持卡片比例 */
@@ -98,7 +98,7 @@
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
-      background-size: 70%;        /* ✅ 背景圖大小設定為 90% 避免超出 */
+      background-size: contain;  /* ✅ 修正背景圖比例過大的問題 */
       background-position: center;
       background-repeat: no-repeat;
     }
