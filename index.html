@@ -55,21 +55,24 @@
     }
 
     /* 放大後卡片的樣式，置中並以畫面寬度的 50% 顯示，保持等比例 */
-    .card.fullscreen {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 50vw;
-      aspect-ratio: 7 / 10;
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(0px);
-      padding: 0;
-      margin: 0;
-    }
+    /* 放大後卡片的樣式，置中顯示並以畫面寬度的 50% 呈現，保持比例不裁切 */
+.card.fullscreen {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50vw;
+  height: auto;
+  max-height: 90vh;
+  aspect-ratio: 7 / 10;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(0px);
+  padding: 0;
+  margin: 0;
+}
 
     /* 放大時旋轉一次動畫 */
     .card.fullscreen .card-inner {
