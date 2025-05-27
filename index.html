@@ -60,7 +60,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 90vw;              /* 放大為畫面寬度的 70% */
+      width: 70vw;              /* 放大為畫面寬度的 70% */
       height: auto;
       max-height: 90vh;         /* 限制最大高度不超出畫面 */
       aspect-ratio: 7 / 10;     /* 保持卡片比例 */
@@ -97,10 +97,22 @@
       left: 0;
       width: 100%;
       height: 100%;
-      backface-visibility: hidden;
-      background-size: 70%;  /* ✅ 修正背景圖比例過大的問題 */
       background-position: center;
       background-repeat: no-repeat;
+      transition: background-size 0.3s ease;
+    }
+
+    /* 預設 backface 隱藏，背景圖較大 */
+    .front, .back {
+      backface-visibility: hidden;
+      background-size: 105%;
+    }
+
+    /* 若顯示 backface，背景圖變小以避免裁切 */
+    .show-backface .front,
+    .show-backface .back {
+      backface-visibility: visible;
+      background-size: 80%;
     }
 
     .back {
