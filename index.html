@@ -17,7 +17,7 @@
       overflow: hidden;
       font-family: sans-serif;
       background-color: #f5f5f5;
-      perspective: 1000px; /* 設置透視距離以便3D效果 */
+      perspective: 1000px;
     }
 
     /* ===== 卡片容器樣式 ===== */
@@ -32,10 +32,10 @@
     }
 
     .blurred {
-      filter: blur(10px); /* 背景模糊效果 */
+      filter: blur(10px);
     }
 
-    /* ===== 單一卡片基本樣式 ===== */
+    /* ===== 卡片基本樣式 ===== */
     .card {
       width: calc((100vw - 40px) / 2);
       height: calc(((100vw - 40px) / 2) * 10 / 7);
@@ -43,24 +43,26 @@
       cursor: pointer;
     }
 
-    /* ===== 卡片內層容器樣式，負責翻轉效果 ===== */
+    /* ===== 卡片內層樣式 ===== */
     .card-inner {
       width: 100%;
       height: 100%;
       position: relative;
-      transition: transform 1s;
+      transition: transform 1s ease, scale 1s ease;
       transform-style: preserve-3d;
     }
 
+    /* 發生翻轉 */
     .card.flipped .card-inner {
-      transform: rotateY(180deg); /* 翻轉動畫效果 */
+      transform: rotateY(180deg);
     }
 
-    /* ===== 放大全螢幕卡片樣式 ===== */
+    /* ===== 全螢幕動畫與樣式 ===== */
     .card.fullscreen {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
       width: 100vw;
       height: 100vh;
       display: flex;
@@ -74,12 +76,22 @@
       width: 70vw;
       max-width: 600px;
       aspect-ratio: 7 / 10;
-      transition: transform 1s;
+      transition: transform 1s ease;
       transform-style: preserve-3d;
+      animation: growAndSpin 1.2s ease forwards;
+    }
+
+    @keyframes growAndSpin {
+      0% {
+        transform: scale(0.5) rotateY(0deg);
+      }
+      100% {
+        transform: scale(1) rotateY(180deg);
+      }
     }
 
     /* ===== 正反面與 info 圖層設定 ===== */
-    .front, .back, .info {
+    .front, .info {
       position: absolute;
       top: 0;
       left: 0;
@@ -87,28 +99,25 @@
       height: 100%;
       background-position: center;
       background-repeat: no-repeat;
-      background-size: 90%;
+      background-size: contain;
       backface-visibility: hidden;
       transition: opacity 0.3s;
     }
 
     .back {
-      transform: rotateY(180deg);
+      display: none;
     }
 
     .info {
       display: none;
       z-index: 1000;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
     }
 
     .info.show {
-      display: block; /* 顯示 info 圖層 */
+      display: block;
     }
 
-    /* ===== 火花特效樣式與動畫 ===== */
+    /* ===== 火花動畫效果 ===== */
     .firework {
       position: absolute;
       pointer-events: none;
@@ -135,38 +144,33 @@
 </head>
 <body>
   <div class="container">
-    <!-- 每張卡片包含 front、back 與 info 圖層，並透過 data-info 提供 info 圖片連結 -->
+    <!-- 四張卡片元件，每張有正面圖與 info 圖 -->
     <div class="card" data-img="card-01.png" data-info="https://images.contentstack.io/v3/assets/bltf59a0f025a7625f9/blt36a7d269cae28030/624f23d130c8f308aa431d0a/1076%E7%82%AB%E9%BB%91%E6%B7%B1%E8%89%B2%E8%A1%A3%E7%89%A9%E6%B4%97%E8%A1%A3%E7%B2%BE.jpg?format=webp">
       <div class="card-inner">
         <div class="front" style="background-image: url('card-01.png')"></div>
-        <div class="back" style="background-image: url('back.png')"></div>
         <div class="info"></div>
       </div>
     </div>
     <div class="card" data-img="card-02.png" data-info="https://images.contentstack.io/v3/assets/bltf59a0f025a7625f9/blt01ed36092cf33f61/6329287c864edf6382e49087/1069-%E5%86%B7%E6%B4%97%E7%B2%BEmini_poster_220919.png?format=webp">
       <div class="card-inner">
         <div class="front" style="background-image: url('card-02.png')"></div>
-        <div class="back" style="background-image: url('back.png')"></div>
         <div class="info"></div>
       </div>
     </div>
     <div class="card" data-img="card-03.png" data-info="https://images.contentstack.io/v3/assets/bltf59a0f025a7625f9/blt1060bb91946f7cdd/62528ec07737b40a532faa1a/1070%E8%A1%A3%E7%89%A9%E6%9F%94%E8%BB%9F%E7%B2%BE.jpg?format=webp">
       <div class="card-inner">
         <div class="front" style="background-image: url('card-03.png')"></div>
-        <div class="back" style="background-image: url('back.png')"></div>
         <div class="info"></div>
       </div>
     </div>
     <div class="card" data-img="card-04.png" data-info="https://images.contentstack.io/v3/assets/bltf59a0f025a7625f9/blt834059873f3ed536/624f24191da0ac09296e0083/1068%E4%B8%89%E5%90%88%E4%B8%80%E8%B6%85%E6%95%88%E6%B4%97%E8%A1%A3%E7%B2%BE.jpg?format=webp">
       <div class="card-inner">
         <div class="front" style="background-image: url('card-04.png')"></div>
-        <div class="back" style="background-image: url('back.png')"></div>
         <div class="info"></div>
       </div>
     </div>
   </div>
 
-  <!-- 音效元件 -->
   <audio id="sfx" src="sfx.wav" preload="auto"></audio>
 
   <script>
@@ -188,12 +192,12 @@
         const infoEl = clone.querySelector(".info");
         infoEl.style.backgroundImage = `url('${infoUrl}')`;
 
-        let state = 0; // 點擊狀態：0 為進入、1 為翻面、2 為顯示資訊、3 為關閉
+        let state = 0; // 0: 放大翻轉, 1: 顯示 info, 2: 關閉卡片
 
         clone.addEventListener("click", () => {
           state++;
           if (state === 1) {
-            clone.classList.add("flipped");
+            cardInner.classList.add("flipped");
           } else if (state === 2) {
             infoEl.classList.add("show");
           } else {
@@ -208,7 +212,6 @@
       });
     });
 
-    // 火花特效生成函式
     function launchFireworkAround(el) {
       const rect = el.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
