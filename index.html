@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>卡片特效</title>
+  <title>SA8</title>
   <style>
-    /* ===== 全域樣式設定 ===== */
+    /* ----------- 全域樣式與排版設定 ----------- */
     * {
       margin: 0;
       padding: 0;
@@ -17,81 +17,81 @@
       overflow: hidden;
       font-family: sans-serif;
       background-color: #f5f5f5;
-      perspective: 1000px;
+      perspective: 1000px; /* 為 3D 效果設置視角距離 */
     }
 
-    /* ===== 卡片容器樣式 ===== */
+    /* ----------- 卡片容器設定 ----------- */
     .container {
       display: grid;
       grid-template-columns: repeat(2, auto);
       grid-template-rows: repeat(2, auto);
+      gap: 8px; /* 四周統一間距為 8px */
       place-content: center;
       width: 100vw;
       height: 100vh;
-      transition: filter 0.3s ease;
+      transition: filter 0.3s ease; /* 模糊切換效果 */
     }
 
+    /* 放大卡片時背景模糊 */
     .blurred {
       filter: blur(10px);
     }
 
-    /* ===== 卡片基本樣式 ===== */
+    /* ----------- 卡片本體 ----------- */
     .card {
-      width: calc((100vw - 40px) / 2);
-      height: calc(((100vw - 40px) / 2) * 10 / 7);
+      width: calc((100vw - 40px) / 2); /* 扣除邊距後平均分兩欄 */
+      height: calc(((100vw - 40px) / 2) * 10 / 7); /* 維持 7:10 比例 */
       perspective: 1000px;
       cursor: pointer;
     }
 
-    /* ===== 卡片內層樣式 ===== */
+    /* 內層容器：負責翻轉與 3D 動畫 */
     .card-inner {
       width: 100%;
       height: 100%;
       position: relative;
-      transition: transform 1s ease, scale 1s ease;
+      transition: transform 1.5s ease-in-out;
       transform-style: preserve-3d;
     }
 
-    /* 發生翻轉 */
-    .card.flipped .card-inner {
-      transform: rotateY(180deg);
-    }
-
-    /* ===== 全螢幕動畫與樣式 ===== */
+    /* ----------- 卡片放大狀態樣式 ----------- */
     .card.fullscreen {
       position: fixed;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(1);
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: rgba(0, 0, 0, 0.75);
+      transform: translate(-50%, -50%);
+      width: 100vw;              /* 放大為畫面寬度的 90% */
+      height: auto;
+      max-height: 90vh;         /* 限制最大高度不超出畫面 */
+      aspect-ratio: 7 / 10;     /* 保持卡片比例 */
       z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(0px);
+      padding: 0;
+      margin: 0;
     }
 
+    /* 放大狀態時觸發旋轉動畫 */
     .card.fullscreen .card-inner {
-      width: 70vw;
-      max-width: 600px;
-      aspect-ratio: 7 / 10;
-      transition: transform 1s ease;
-      transform-style: preserve-3d;
-      animation: growAndSpin 1.2s ease forwards;
+      width: 100%;
+      height: 100%;
+      animation: spinOnce 1.2s ease-out forwards;
     }
 
-    @keyframes growAndSpin {
+    /* ----------- 旋轉動畫定義 ----------- */
+    @keyframes spinOnce {
       0% {
-        transform: scale(0.5) rotateY(0deg);
+        transform: scale(1) rotateY(0deg);
       }
       100% {
-        transform: scale(1) rotateY(180deg);
+        transform: scale(1) rotateY(360deg);
       }
     }
 
-    /* ===== 正反面與 info 圖層設定 ===== */
-    .front, .info {
+    /* ----------- 卡片正反面樣式 ----------- */
+    .front, .back {
       position: absolute;
       top: 0;
       left: 0;
@@ -99,25 +99,27 @@
       height: 100%;
       background-position: center;
       background-repeat: no-repeat;
-      background-size: contain;
+      transition: background-size 0.3s ease;
+    }
+
+    /* 預設 backface 隱藏，背景圖較大 */
+    .front, .back {
       backface-visibility: hidden;
-      transition: opacity 0.3s;
+      background-size: 110%;
+    }
+
+    /* 若顯示 backface，背景圖變小以避免裁切 */
+    .show-backface .front,
+    .show-backface .back {
+      backface-visibility: visible;
+      background-size: 80%;
     }
 
     .back {
-      display: none;
+      transform: rotateY(180deg); /* 背面需水平翻轉 */
     }
 
-    .info {
-      display: none;
-      z-index: 1000;
-    }
-
-    .info.show {
-      display: block;
-    }
-
-    /* ===== 火花動畫效果 ===== */
+    /* ----------- 點擊後火花特效 ----------- */
     .firework {
       position: absolute;
       pointer-events: none;
@@ -143,34 +145,35 @@
   </style>
 </head>
 <body>
+  <!-- ======== 四張卡片元素，含前後面圖層 ======== -->
   <div class="container">
-    <!-- 四張卡片元件，每張有正面圖與 info 圖 -->
-    <div class="card" data-img="card-01.png" data-info="https://images.contentstack.io/v3/assets/bltf59a0f025a7625f9/blt36a7d269cae28030/624f23d130c8f308aa431d0a/1076%E7%82%AB%E9%BB%91%E6%B7%B1%E8%89%B2%E8%A1%A3%E7%89%A9%E6%B4%97%E8%A1%A3%E7%B2%BE.jpg?format=webp">
+    <div class="card" data-img="card-01.png">
       <div class="card-inner">
         <div class="front" style="background-image: url('card-01.png')"></div>
-        <div class="info"></div>
+        <div class="back" style="background-image: url('back.png')"></div>
       </div>
     </div>
-    <div class="card" data-img="card-02.png" data-info="https://images.contentstack.io/v3/assets/bltf59a0f025a7625f9/blt01ed36092cf33f61/6329287c864edf6382e49087/1069-%E5%86%B7%E6%B4%97%E7%B2%BEmini_poster_220919.png?format=webp">
+    <div class="card" data-img="card-02.png">
       <div class="card-inner">
         <div class="front" style="background-image: url('card-02.png')"></div>
-        <div class="info"></div>
+        <div class="back" style="background-image: url('back.png')"></div>
       </div>
     </div>
-    <div class="card" data-img="card-03.png" data-info="https://images.contentstack.io/v3/assets/bltf59a0f025a7625f9/blt1060bb91946f7cdd/62528ec07737b40a532faa1a/1070%E8%A1%A3%E7%89%A9%E6%9F%94%E8%BB%9F%E7%B2%BE.jpg?format=webp">
+    <div class="card" data-img="card-03.png">
       <div class="card-inner">
         <div class="front" style="background-image: url('card-03.png')"></div>
-        <div class="info"></div>
+        <div class="back" style="background-image: url('back.png')"></div>
       </div>
     </div>
-    <div class="card" data-img="card-04.png" data-info="https://images.contentstack.io/v3/assets/bltf59a0f025a7625f9/blt834059873f3ed536/624f24191da0ac09296e0083/1068%E4%B8%89%E5%90%88%E4%B8%80%E8%B6%85%E6%95%88%E6%B4%97%E8%A1%A3%E7%B2%BE.jpg?format=webp">
+    <div class="card" data-img="card-04.png">
       <div class="card-inner">
         <div class="front" style="background-image: url('card-04.png')"></div>
-        <div class="info"></div>
+        <div class="back" style="background-image: url('back.png')"></div>
       </div>
     </div>
   </div>
 
+  <!-- ======== 音效元素（點擊卡片時播放） ======== -->
   <audio id="sfx" src="sfx.wav" preload="auto"></audio>
 
   <script>
@@ -178,40 +181,7 @@
     const sound = document.getElementById("sfx");
     const container = document.querySelector(".container");
 
-    cards.forEach(card => {
-      card.addEventListener("click", () => {
-        sound.pause();
-        sound.currentTime = 2.0;
-        sound.play().catch(err => console.warn("Autoplay blocked:", err));
-
-        const clone = card.cloneNode(true);
-        clone.classList.add("fullscreen");
-
-        const cardInner = clone.querySelector(".card-inner");
-        const infoUrl = card.getAttribute("data-info");
-        const infoEl = clone.querySelector(".info");
-        infoEl.style.backgroundImage = `url('${infoUrl}')`;
-
-        let state = 0; // 0: 放大翻轉, 1: 顯示 info, 2: 關閉卡片
-
-        clone.addEventListener("click", () => {
-          state++;
-          if (state === 1) {
-            cardInner.classList.add("flipped");
-          } else if (state === 2) {
-            infoEl.classList.add("show");
-          } else {
-            clone.remove();
-            container.classList.remove("blurred");
-          }
-        });
-
-        document.body.appendChild(clone);
-        container.classList.add("blurred");
-        launchFireworkAround(clone);
-      });
-    });
-
+    // 產生火花特效的函式
     function launchFireworkAround(el) {
       const rect = el.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
@@ -231,6 +201,28 @@
         setTimeout(() => spark.remove(), 2200);
       }
     }
+
+    // 點擊卡片後：播放音效、顯示放大卡片、觸發動畫與特效
+    cards.forEach(card => {
+      card.addEventListener("click", () => {
+        sound.pause();
+        sound.currentTime = 2.0;
+        sound.play().catch(err => {
+          console.warn("Autoplay blocked:", err);
+        });
+
+        const clone = card.cloneNode(true);
+        clone.classList.add("fullscreen");
+        clone.addEventListener("click", () => {
+          clone.remove();
+          container.classList.remove("blurred");
+        });
+
+        document.body.appendChild(clone);
+        container.classList.add("blurred");
+        launchFireworkAround(clone);
+      });
+    });
   </script>
 </body>
 </html>
