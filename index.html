@@ -25,22 +25,21 @@
       display: grid;
       grid-template-columns: repeat(2, auto);
       grid-template-rows: repeat(2, auto);
-      gap: 8px; /* 卡片間距 */
-      place-content: center;
+      place-content: center; /* 垂直與水平置中 */
       width: 100vw;
       height: 100vh;
-      transition: filter 0.3s ease;
+      transition: filter 0.3s ease; /* 模糊動畫效果 */
     }
 
     .blurred {
-      filter: blur(10px);
+      filter: blur(10px); /* 模糊效果 */
     }
 
     /* ----------- 卡片樣式 ----------- */
     .card {
-      width: calc((100vw - 40px) / 2);
-      height: calc(((100vw - 40px) / 2) * 10 / 7);
-      perspective: 1000px;
+      width: calc((100vw - 40px) / 2); /* 每張卡片寬度，扣除左右邊距 */
+      height: calc(((100vw - 40px) / 2) * 10 / 7); /* 保持 7:10 高寬比 */
+      perspective: 1000px; /* 提供內部翻轉 3D 效果 */
       cursor: pointer;
     }
 
@@ -48,15 +47,15 @@
       width: 100%;
       height: 100%;
       position: relative;
-      transition: transform 1s;
-      transform-style: preserve-3d;
+      transition: transform 1s; /* 翻轉動畫 */
+      transform-style: preserve-3d; /* 保持 3D 結構 */
     }
 
     .card.flipped .card-inner {
-      transform: rotateY(180deg);
+      transform: rotateY(180deg); /* 翻轉到背面 */
     }
 
-    /* ----------- 放大模式 ----------- */
+    /* ----------- 放大模式：覆蓋全畫面 ----------- */
     .card.fullscreen {
       position: fixed;
       top: 0;
@@ -66,14 +65,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: rgba(0, 0, 0, 0.75);
+      background-color: rgba(0, 0, 0, 0.75); /* 半透明遮罩 */
       z-index: 999;
     }
 
     .card.fullscreen .card-inner {
-      width: 70vw;
-      max-width: 600px;
-      aspect-ratio: 7 / 10;
+      width: 70vw; /* 放大卡片寬度佔 70% 螢幕 */
+      max-width: 600px; /* 設定最大寬度 */
+      aspect-ratio: 7 / 10; /* 保持卡片比例 */
     }
 
     /* ----------- 正面／背面／資訊面 ----------- */
@@ -85,28 +84,28 @@
       height: 100%;
       background-position: center;
       background-repeat: no-repeat;
-      background-size: 90%;
-      backface-visibility: hidden;
-      transition: opacity 0.3s;
+      background-size: 90%; /* 控制圖片尺寸 */
+      backface-visibility: hidden; /* 背面隱藏 */
+      transition: opacity 0.3s; /* 淡入淡出動畫 */
     }
 
     .back {
-      transform: rotateY(180deg);
+      transform: rotateY(180deg); /* 背面需水平翻轉 */
     }
 
     .info {
       display: none;
-      z-index: 1000;
+      z-index: 1000; /* 顯示在最上層 */
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
     }
 
     .info.show {
-      display: block;
+      display: block; /* 顯示資訊圖片 */
     }
 
-    /* ----------- 點擊火花特效 ----------- */
+    /* ----------- 點擊火花特效動畫 ----------- */
     .firework {
       position: absolute;
       pointer-events: none;
@@ -143,6 +142,7 @@
     </div>
   </div>
 
+  <!-- ======== 音效效果 ======== -->
   <audio id="sfx" src="sfx.wav" preload="auto"></audio>
 
   <script>
@@ -152,10 +152,12 @@
 
     cards.forEach(card => {
       card.addEventListener("click", () => {
+        // 播放音效
         sound.pause();
         sound.currentTime = 2.0;
         sound.play().catch(err => console.warn("Autoplay blocked:", err));
 
+        // 複製卡片進入全螢幕模式
         const clone = card.cloneNode(true);
         clone.classList.add("fullscreen");
 
@@ -168,21 +170,22 @@
         clone.addEventListener("click", () => {
           state++;
           if (state === 1) {
-            clone.classList.add("flipped");
+            clone.classList.add("flipped"); // 第一次點擊翻轉
           } else if (state === 2) {
-            infoEl.classList.add("show");
+            infoEl.classList.add("show"); // 第二次點擊顯示 info
           } else {
-            clone.remove();
+            clone.remove(); // 第三次關閉全螢幕
             container.classList.remove("blurred");
           }
         });
 
         document.body.appendChild(clone);
         container.classList.add("blurred");
-        launchFireworkAround(clone);
+        launchFireworkAround(clone); // 點擊火花動畫
       });
     });
 
+    // 產生火花動畫
     function launchFireworkAround(el) {
       const rect = el.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
