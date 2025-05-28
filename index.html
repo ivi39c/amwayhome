@@ -79,13 +79,16 @@
       0% {
         transform: rotateY(0deg);
       }
+      50% {
+        transform: rotateY(180deg);
+      }
       100% {
         transform: rotateY(360deg);
       }
     }
 
     /* ----------- 正面樣式 ----------- */
-    .front {
+    .front, .back {
       position: absolute;
       top: 0;
       left: 0;
@@ -95,6 +98,10 @@
       background-repeat: no-repeat;
       background-size: contain;
       backface-visibility: hidden;
+    }
+
+    .back {
+      transform: rotateY(180deg);
     }
 
     /* ----------- 火花特效 ----------- */
@@ -123,31 +130,35 @@
   </style>
 </head>
 <body>
-  <!-- ======== 四張卡片元素 ======== -->
+  <!-- ======== 四張卡片元素，含正反面圖層 ======== -->
   <div class="container">
     <div class="card" data-img="card-01.png">
       <div class="card-inner">
         <div class="front" style="background-image: url('card-01.png')"></div>
+        <div class="back" style="background-image: url('back.png')"></div>
       </div>
     </div>
     <div class="card" data-img="card-02.png">
       <div class="card-inner">
         <div class="front" style="background-image: url('card-02.png')"></div>
+        <div class="back" style="background-image: url('back.png')"></div>
       </div>
     </div>
     <div class="card" data-img="card-03.png">
       <div class="card-inner">
         <div class="front" style="background-image: url('card-03.png')"></div>
+        <div class="back" style="background-image: url('back.png')"></div>
       </div>
     </div>
     <div class="card" data-img="card-04.png">
       <div class="card-inner">
         <div class="front" style="background-image: url('card-04.png')"></div>
+        <div class="back" style="background-image: url('back.png')"></div>
       </div>
     </div>
   </div>
 
-  <!-- ======== 音效 ======== -->
+  <!-- ======== 點擊時音效 ======== -->
   <audio id="sfx" src="sfx.wav" preload="auto"></audio>
 
   <script>
@@ -155,30 +166,32 @@
     const sound = document.getElementById("sfx");
     const container = document.querySelector(".container");
 
+    // 為每張卡片加入點擊事件
     cards.forEach(card => {
       card.addEventListener("click", () => {
-        // 播放音效
+        // 播放點擊音效
         sound.pause();
         sound.currentTime = 2.0;
         sound.play().catch(err => console.warn("Autoplay blocked:", err));
 
-        // 複製卡片並加上全螢幕 class
+        // 複製卡片，加入全螢幕樣式
         const clone = card.cloneNode(true);
         clone.classList.add("fullscreen");
 
-        // 點擊再次關閉全螢幕
+        // 點擊放大卡片再次點擊後會關閉
         clone.addEventListener("click", () => {
           clone.remove();
           container.classList.remove("blurred");
         });
 
+        // 加入畫面並啟動火花動畫
         document.body.appendChild(clone);
         container.classList.add("blurred");
         launchFireworkAround(clone);
       });
     });
 
-    // 火花動畫函數
+    // 火花動畫生成函式
     function launchFireworkAround(el) {
       const rect = el.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
