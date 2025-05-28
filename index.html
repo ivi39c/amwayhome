@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>卡片特效</title>
   <style>
-    /* ===== 全域樣式設定 ===== */
     * {
       margin: 0;
       padding: 0;
@@ -20,7 +19,6 @@
       perspective: 1000px;
     }
 
-    /* ===== 卡片容器樣式 ===== */
     .container {
       display: grid;
       grid-template-columns: repeat(2, auto);
@@ -35,7 +33,6 @@
       filter: blur(10px);
     }
 
-    /* ===== 卡片基本樣式 ===== */
     .card {
       width: calc((100vw - 40px) / 2);
       height: calc(((100vw - 40px) / 2) * 10 / 7);
@@ -47,11 +44,9 @@
       width: 100%;
       height: 100%;
       position: relative;
-      transition: transform 1s ease, scale 1s ease;
       transform-style: preserve-3d;
     }
 
-    /* ===== 全螢幕動畫與樣式 ===== */
     .card.fullscreen {
       position: fixed;
       top: 50%;
@@ -70,21 +65,11 @@
       width: 70vw;
       max-width: 600px;
       aspect-ratio: 7 / 10;
-      transition: transform 1s ease;
+      transition: transform 1.2s ease;
       transform-style: preserve-3d;
-      animation: growAndSpin 1.2s ease forwards;
+      transform: rotateY(180deg);
     }
 
-    @keyframes growAndSpin {
-      0% {
-        transform: scale(0.5) rotateY(0deg);
-      }
-      100% {
-        transform: scale(1) rotateY(180deg);
-      }
-    }
-
-    /* ===== 正面圖與 info 圖層設定 ===== */
     .front, .info {
       position: absolute;
       top: 0;
@@ -95,19 +80,18 @@
       background-repeat: no-repeat;
       background-size: contain;
       backface-visibility: hidden;
-      transition: opacity 0.3s;
     }
 
     .info {
       display: none;
       z-index: 1000;
+      transform: rotateY(180deg);
     }
 
     .info.show {
       display: block;
     }
 
-    /* ===== 火花動畫效果 ===== */
     .firework {
       position: absolute;
       pointer-events: none;
@@ -134,7 +118,6 @@
 </head>
 <body>
   <div class="container">
-    <!-- 四張卡片元件，每張有正面圖與 info 圖 -->
     <div class="card" data-img="card-01.png" data-info="https://images.contentstack.io/v3/assets/bltf59a0f025a7625f9/blt36a7d269cae28030/624f23d130c8f308aa431d0a/1076%E7%82%AB%E9%BB%91%E6%B7%B1%E8%89%B2%E8%A1%A3%E7%89%A9%E6%B4%97%E8%A1%A3%E7%B2%BE.jpg?format=webp">
       <div class="card-inner">
         <div class="front" style="background-image: url('card-01.png')"></div>
@@ -187,7 +170,7 @@
         clone.addEventListener("click", () => {
           state++;
           if (state === 1) {
-            // do nothing, already flipped on first load
+            // 初始進入時已經旋轉
           } else if (state === 2) {
             infoEl.classList.add("show");
           } else {
